@@ -1,6 +1,5 @@
 ﻿using OpenCL.Net;
 using OpenCvSharp;
-using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -45,6 +44,14 @@ namespace Test
                 c[i] = a[i] + b[i];
             }
         }
+
+        public static void addArraysLinq(int[] a, int[] b, int[] c, int size)
+        {
+            var result = a.Zip(b, (x, y) => x + y);
+            //var result = a.Zip(b, (x, y) => x + y).ToArray();
+            //Array.Copy(result, c, size);
+        }
+
 
         // CV
         public static Mat _a;
@@ -125,7 +132,7 @@ namespace Test
         public static void Main(string[] args)
         {
             //int _size = 3 * 1600 * 1156;
-            int _size = 10000000;
+            int _size = 1000000;
             int _length = 30;
             int[] _a = new int[_size];
             int[] _b = new int[_size];
@@ -134,6 +141,7 @@ namespace Test
             int[] _for = new int[_size];
             int[] _cv = new int[_size];
             int[] _opencl = new int[_size];
+            int[] _linq = new int[_size];
 
             for (int i = 0; i < _size; i++)
             {
@@ -164,6 +172,17 @@ namespace Test
                 Console.WriteLine($"Time: {sw.ElapsedMilliseconds} ms");
             }
             Print(_for);
+
+            // CPU using LINQ
+            Console.WriteLine("CPU LINQ");
+            for (int i = 0; i < _length; i++)
+            {
+                sw.Restart();
+                addArraysLinq(_a, _b, _linq, _size);
+                sw.Stop();
+                Console.WriteLine($"Time: {sw.ElapsedMilliseconds} ms");
+            }
+            Print(_linq);
 
             // CV
             Console.WriteLine("CPU OpenCV");

@@ -38,7 +38,7 @@ extern "C" __declspec(dllexport) void addArrays() {
     // 비동기 커널 실행
     int threadsPerBlock = 512;
     int numBlocks = (size + threadsPerBlock - 1) / threadsPerBlock;
-    add << <numBlocks, threadsPerBlock, 0, stream >> > (dev_a, dev_b, dev_c, size);
+    add <<< numBlocks, threadsPerBlock, 0, stream >>> (dev_a, dev_b, dev_c, size);
 }
 
 extern "C" __declspec(dllexport) void copyToHost(int* c) {
